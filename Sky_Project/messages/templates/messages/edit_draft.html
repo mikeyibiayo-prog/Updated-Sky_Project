@@ -1,0 +1,28 @@
+ {% extends "messages/base_messages.html" %}
+
+{% block title %}Edit Draft{% endblock %}
+
+{% block messages_content %}
+<h1 class="mb-4">Edit Draft</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label class="form-label">Recipient (username)</label>
+        <input type="text" name="recipient" class="form-control" value="{{ message.recipient.username }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Subject</label>
+        <input type="text" name="subject" class="form-control" value="{{ message.subject }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Message</label>
+        <textarea name="body" class="form-control" rows="4" required>{{ message.body }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+</form>
+{% endblock %}

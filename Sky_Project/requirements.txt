@@ -1,0 +1,17 @@
+asgiref==3.11.1
+brotli==1.2.0
+cffi==2.0.0
+cssselect2==0.9.0
+Django==6.0.3
+fonttools==4.62.1
+pillow==12.2.0
+pycparser==3.0
+pydyf==0.12.1
+pygame==2.6.1
+pyphen==0.17.2
+sqlparse==0.5.5
+tinycss2==1.5.1
+tinyhtml5==2.1.0
+weasyprint==68.1
+webencodings==0.5.1
+zopfli==0.4.1

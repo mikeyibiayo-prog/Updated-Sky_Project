@@ -1,0 +1,38 @@
+{% extends "messages/base_messages.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block messages_content %}
+
+<h1 class="mb-4">Search Results</h1>
+
+<p class="text-muted">
+    Searched for: "<strong>{{ query }}</strong>"
+</p>
+
+<div class="list-group">
+    {% for message in results %}
+        <a href="{% url 'messages:message_detail' message.id %}" class="list-group-item list-group-item-action">
+            
+            <strong>{{ message.subject }}</strong>
+
+            <br>
+
+            <small class="text-muted">
+                From: {{ message.sender.username }} |
+                To: {{ message.recipient.username }}
+            </small>
+
+            <p class="mb-0">
+                {{ message.body|truncatewords:20 }}
+            </p>
+
+        </a>
+    {% empty %}
+        <div class="list-group-item text-center text-muted">
+            No messages found.
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
