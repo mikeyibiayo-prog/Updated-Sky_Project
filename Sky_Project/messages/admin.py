@@ -82,17 +82,51 @@ class TeamAdmin(admin.ModelAdmin):
                 status=500
             )
 
-        teams = Team.objects.all().order_by('department__name', 'name')
+        teams = Team.objects.select_related('department', 'manager').all().order_by(
+            'department__name',
+            'name'
+        )
+
         departments = Department.objects.all().order_by('name')
-        teams_without_managers = Team.objects.filter(manager__isnull=True).order_by('name')
+
+        team_members = TeamMember.objects.select_related(
+            'team',
+            'engineer'
+        ).all().order_by('team__name', 'engineer__full_name')
+
+        dependencies = TeamDependency.objects.select_related(
+            'team',
+            'depends_on_team'
+        ).all().order_by('team__name', 'depends_on_team__name')
+
+        repositories = Repository.objects.select_related(
+            'team'
+        ).all().order_by('team__name', 'name')
+
+        contact_channels = ContactChannel.objects.select_related(
+            'team'
+        ).all().order_by('team__name', 'type')
+
+        teams_without_managers = Team.objects.filter(
+            manager__isnull=True
+        ).select_related('department').order_by('name')
 
         html_string = render_to_string('messages/team_report.html', {
             'teams': teams,
             'departments': departments,
+            'team_members': team_members,
+            'dependencies': dependencies,
+            'repositories': repositories,
+            'contact_channels': contact_channels,
             'teams_without_managers': teams_without_managers,
+
             'total_teams': teams.count(),
             'total_departments': departments.count(),
-            'total_without_managers': teams_without_managers.count(),
+            'total_team_members': team_members.count(),
+            'total_dependencies': dependencies.count(),
+            'total_repositories': repositories.count(),
+            'total_contact_channels': contact_channels.count(),
+            'teams_without_managers_count': teams_without_managers.count(),
         })
 
         pdf_file = HTML(string=html_string).write_pdf()
