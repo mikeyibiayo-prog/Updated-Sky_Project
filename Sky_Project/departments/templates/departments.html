@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Main container styling to match the light gray-blue background */
+    .departments-container {
+        padding: 40px;
+        background-color: #f5f6fa; 
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .departments-title {
+        color: #1e3a5f;
+        font-size: 32px;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 30px;
+    }
+
+    /* CSS Grid setup for the 3x2 layout */
+    .departments-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+
+    /* Card styling */
+    .department-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 30px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .department-card h2 {
+        color: #1e3a5f;
+        font-size: 24px;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+
+    .teams-label {
+        color: #1e3a5f;
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+
+    /* Numbered list styling */
+    .department-card ol {
+        margin: 0 0 30px 0;
+        padding-left: 20px;
+        color: #1e3a5f;
+        font-size: 15px;
+        line-height: 1.6;
+        flex-grow: 1; /* Pushes the button to the bottom if list heights vary */
+    }
+
+    .department-card li {
+        padding-left: 5px;
+    }
+
+    /* Button styling */
+    .view-details-btn {
+        background-color: #6aa8d1;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        align-self: flex-start; /* Keeps the button from stretching */
+        transition: background-color 0.2s ease;
+        text-decoration: none; /* Removes link underline */
+        display: inline-block; /* Allows padding to work on a link */
+    }
+
+    .view-details-btn:hover {
+        background-color: #558db3;
+    }
+
+    /* Make it responsive for smaller screens */
+    @media (max-width: 1100px) {
+        .departments-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .departments-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="departments-container">
+    <h1 class="departments-title">Departments</h1>
+
+    <div class="departments-grid">
+        <div class="department-card">
+            <h2>Platform Engineering</h2>
+            <div class="teams-label">Teams:</div>
+            <ol>
+                <li>Cloud Infra</li>
+                <li>Database Admin</li>
+                <li>Internal Security</li>
+            </ol>
+            <a href="{% url 'platform_engineering' %}" class="view-details-btn">View Department Details</a>
+        </div>
+
+        <div class="department-card">
+            <h2>Product Dev</h2>
+            <div class="teams-label">Teams:</div>
+            <ol>
+                <li>Core Architecture</li>
+                <li>Web Storefront</li>
+                <li>Automation</li>
+            </ol>
+            <a href="{% url 'product_dev' %}" class="view-details-btn">View Department Details</a>
+        </div>
+
+        <div class="department-card">
+            <h2>Mobile App</h2>
+            <div class="teams-label">Teams:</div>
+            <ol>
+                <li>iOS Platform</li>
+                <li>Android Platform</li>
+                <li>Mobile API Integration</li>
+            </ol>
+            <a href="{% url 'mobile_app' %}" class="view-details-btn">View Department Details</a>
+        </div>
+
+        <div class="department-card">
+            <h2>Human Resources</h2>
+            <div class="teams-label">Teams:</div>
+            <ol>
+                <li>HR Information Systems</li>
+                <li>Engineering Onboarding</li>
+                <li>Recruiting Operations</li>
+            </ol>
+            <a href="{% url 'human_resources' %}" class="view-details-btn">View Department Details</a>
+        </div>
+
+        <div class="department-card">
+            <h2>Management</h2>
+            <div class="teams-label">Teams:</div>
+            <ol>
+                <li>Engineering Operations</li>
+                <li>Tech Strategy</li>
+                <li>Development Efficiency</li>
+            </ol>
+            <a href="{% url 'management' %}" class="view-details-btn">View Department Details</a>
+        </div>
+
+        <div class="department-card">
+            <h2>Broadcasting</h2>
+            <div class="teams-label">Teams:</div>
+            <ol>
+                <li>Live Infrastructure</li>
+                <li>Video Hosting</li>
+                <li>Broadcast Analytics</li>
+            </ol>
+            <a href="{% url 'broadcasting' %}" class="view-details-btn">View Department Details</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

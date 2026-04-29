@@ -1,30 +1,50 @@
-/* sets the background colour of the whole page */
 body {
-    background-color: #f8f9fa; /* light grey background to make content easier to read */
+    background-color: #f8f9fa;
 }
 
-/* styles all main headings */
 h1 {
-    font-weight: 700; /* makes headings bold for better visibility */
+    font-weight: 700;
 }
 
-/* styles the brand name in the navbar */
 .navbar-brand {
-    font-weight: bold; /* makes the title stand out */
+    font-weight: bold;
 }
 
-/* styles card components used in the layout */
 .card {
-    border-radius: 12px; /* rounds the corners to make the UI look smoother */
+    border-radius: 12px;
 }
 
-/* styles links inside list group items */
 .list-group-item a {
-    text-decoration: none; /* removes underline from links */
-    color: black; /* sets default link colour */
+    text-decoration: none;
+    color: black;
 }
 
-/* changes link colour when hovered over */
 .list-group-item a:hover {
-    color: #0d6efd; /* blue highlight to show interactivity */
+    color: #0d6efd;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 260px;
+    background-color: #233566; /* The dark blue from your design */
+    flex-shrink: 0;
+}
+
+.sidebar .nav-link {
+    color: #a5b4d3 !important; /* Dimmed text for unselected items */
+    margin-bottom: 5px;
+    border-radius: 8px;
+    padding: 10px 16px;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #354a8e; /* Lighter blue hover effect */
+    color: #ffffff !important;
+}
+
+/* Ensure the main content takes up the remaining screen space */
+.main-content {
+    flex-grow: 1;
+    height: 100vh;
+    overflow-y: auto;
 }

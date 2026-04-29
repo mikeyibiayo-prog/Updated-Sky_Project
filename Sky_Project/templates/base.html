@@ -2,89 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
-    <!-- ensures the page scales properly on different screen sizes -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- allows each page to have its own title -->
     <title>{% block title %}Sky Project{% endblock %}</title>
 
-    <!-- loads Django static filess (used for css, images etc) -->
     {% load static %}
-
-    <!-- Bootstrap CSS for layout and styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- custom css file for project styling -->
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
+    <div class="d-flex" style="min-height: 100vh;">
+        
+        <nav class="sidebar d-flex flex-column p-3">
+            
+            <a href="{% url 'messages:inbox' %}" class="d-flex align-items-center mb-4 me-md-auto text-white text-decoration-none">
+                <span class="badge bg-light text-dark me-2 fs-5">S</span>
+                <span class="fs-4 fw-bold">SKY</span>
+            </a>
+            
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-white">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-white">
+                        Teams
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'organisation' %}" class="nav-link text-white">
+                        Organisation
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'departments' %}" class="nav-link text-white">
+                        Departments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'messages:inbox' %}" class="nav-link text-white">
+                        Messages
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-white">
+                        Schedule
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-white">
+                        Reports
+                    </a>
+                </li>
 
-    <!-- navigation bar shown on every page -->
-    <nav class="navbar navbar-expand-lg bg-light border-bottom">
-        <div class="container">
 
-            <!-- site title that links to inbox -->
-            <a class="navbar-brand fw-bold" href="{% url 'messages:inbox' %}">Sky Project</a>
+            </ul>
+            
+            <hr class="text-white">
 
-            <div class="ms-auto">
-
-                <!-- checks if user is logged in -->
+            <div>
                 {% if user.is_authenticated %}
-
-                    <!-- displays username -->
-                    <span class="me-3">Hello, {{ user.username }}</span>
-
-                    <!-- shows admin button only for admin users -->
+                    <span class="d-block mb-3 text-white">Hello, {{ user.username }}</span>
                     {% if user.is_staff %}
-                        <a href="/admin/" class="btn btn-sm btn-outline-dark me-2">Admin</a>
+                        <a href="/admin/" class="btn btn-sm btn-outline-light w-100 mb-2">Admin</a>
                     {% endif %}
-
-                    <!-- logout button -->
-                    <a href="{% url 'logout' %}" class="btn btn-sm btn-danger">Logout</a>
-
+                    <a href="{% url 'logout' %}" class="btn btn-sm btn-danger w-100">Logout</a>
                 {% else %}
-
-                    <!-- login and signup buttons for users not logged in -->
-                    <a href="{% url 'login' %}" class="btn btn-sm btn-primary me-2">Login</a>
-                    <a href="{% url 'signup' %}" class="btn btn-sm btn-success">Sign Up</a>
-
+                    <a href="{% url 'login' %}" class="btn btn-sm btn-primary w-100 mb-2">Login</a>
+                    <a href="{% url 'signup' %}" class="btn btn-sm btn-success w-100">Sign Up</a>
                 {% endif %}
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <!-- displays success or error messages after actions -->
-    {% if messages %}
-        <div class="container mt-3">
-            {% for message in messages %}
-
-                <!-- alert box changes colour depending on message type -->
-                <div class="alert 
-                    {% if message.tags == 'error' %}alert-danger
-                    {% elif message.tags == 'success' %}alert-success
-                    {% else %}alert-info
-                    {% endif %}
-                    alert-dismissible fade show" role="alert">
-
-                    <!-- message text -->
-                    {{ message }}
-
-                    <!-- button to close alert -->
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <main class="main-content bg-light">
+            
+            {% if messages %}
+                <div class="container mt-3">
+                    {% for message in messages %}
+                        <div class="alert 
+                            {% if message.tags == 'error' %}alert-danger
+                            {% elif message.tags == 'success' %}alert-success
+                            {% else %}alert-info
+                            {% endif %}
+                            alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
                 </div>
+            {% endif %}
 
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <!-- main content area where each page inserts its content -->
-    <div class="container mt-4">
-        {% block content %}
-        {% endblock %}
+            <div class="container p-4">
+                {% block content %}
+                {% endblock %}
+            </div>
+            
+        </main>
     </div>
 
-    <!-- Bootstrap JavaScript for interactive elements -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

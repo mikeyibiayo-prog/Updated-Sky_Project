@@ -14,19 +14,21 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-"""
-
-"""
-
-# Imports Django admin site.
 from django.contrib import admin
-
-# Imports path for urls and include to connect app urls.
 from django.urls import path, include
+from departments import views as dep_views
+from organisation import views as org_views
 
-# Main project url routes.
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Django admin dashboard
-    path('accounts/', include('accounts.urls')),  # account pages such as login and signup
-    path('', include('messages.urls')),  # messages app shown from the main site url
+    path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.urls')),
+    path('', include('messages.urls')),
+    path('departments/', dep_views.departments_view, name='departments'),
+    path('departments/platform-engineering/', dep_views.platform_engineering, name='platform_engineering'),
+    path('departments/product-dev/', dep_views.product_dev, name='product_dev'),
+    path('departments/mobile-app/', dep_views.mobile_app, name='mobile_app'),
+    path('departments/human-resources/', dep_views.human_resources, name='human_resources'),
+    path('departments/management/', dep_views.management, name='management'),
+    path('departments/broadcasting/', dep_views.broadcasting, name='broadcasting'),
+    path('organisation/', org_views.organisation_view, name='organisation'),
 ]
