@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+    <div class="container-fluid">
+
+        <!-- Brand -->
+        <a class="navbar-brand fw-bold" href="{% url 'messages:inbox' %}">
+            Messages
+        </a>
+
+        <!-- Toggle button (for mobile responsiveness) -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav">
+                <a class="nav-link" href="{% url 'messages:inbox' %}">Inbox</a>
+                <a class="nav-link" href="{% url 'messages:sent' %}">Sent</a>
+                <a class="nav-link" href="{% url 'messages:draft' %}">Draft</a>
+                <a class="nav-link" href="{% url 'messages:new_message' %}">New Message</a>
+            </div>
+        </div>
+
+    </div>
+</nav>

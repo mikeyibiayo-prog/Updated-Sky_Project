@@ -6,29 +6,35 @@
 
 <h1 class="mb-4">Search Results</h1>
 
+<!-- shows the search term the user entered -->
 <p class="text-muted">
     Searched for: "<strong>{{ query }}</strong>"
 </p>
 
+<!-- displays matching messages -->
 <div class="list-group">
     {% for message in results %}
+        <!-- each result links to the full message detail page -->
         <a href="{% url 'messages:message_detail' message.id %}" class="list-group-item list-group-item-action">
             
             <strong>{{ message.subject }}</strong>
 
             <br>
 
+            <!-- shows sender and recipient to give context for each result -->
             <small class="text-muted">
                 From: {{ message.sender.username }} |
                 To: {{ message.recipient.username }}
             </small>
 
+            <!-- shows a shortened preview of the message body -->
             <p class="mb-0">
                 {{ message.body|truncatewords:20 }}
             </p>
 
         </a>
     {% empty %}
+        <!-- shown when the search finds no results -->
         <div class="list-group-item text-center text-muted">
             No messages found.
         </div>

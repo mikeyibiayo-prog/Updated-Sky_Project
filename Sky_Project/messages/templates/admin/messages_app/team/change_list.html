@@ -2,8 +2,12 @@
 
 {% block object-tools-items %}
     {{ block.super }}
+    <!-- keeps the default admin buttons such as add, filters and actions -->
 
     <li>
+        <!-- custom button added to the admin page -->
+        <!-- this links to a custom admin view that generates the team report -->
+        <!-- the url name 'admin:team_report' must be defined in admin.py -->
         <a href="{% url 'admin:team_report' %}" class="button">
             Generate Team Report
         </a>

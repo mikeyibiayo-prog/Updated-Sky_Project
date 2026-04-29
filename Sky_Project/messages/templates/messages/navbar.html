@@ -1,17 +1,18 @@
+<!-- messages navigation bar shown across all messages pages -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
     <div class="container-fluid">
 
-        <!-- Brand -->
+        <!-- brand/title link sends the user back to the inbox -->
         <a class="navbar-brand fw-bold" href="{% url 'messages:inbox' %}">
             Messages
         </a>
 
-        <!-- Toggle button (for mobile responsiveness) -->
+        <!-- mobile menu toggle button from bootstrap -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Links -->
+        <!-- navigation links for the main messages sections -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <div class="navbar-nav">
                 <a class="nav-link" href="{% url 'messages:inbox' %}">Inbox</a>

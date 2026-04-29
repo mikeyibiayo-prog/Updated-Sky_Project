@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Team Report</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #222;
+        }
+
+        h1 {
+            color: #1f4e79;
+            border-bottom: 2px solid #1f4e79;
+            padding-bottom: 8px;
+        }
+
+        h2 {
+            margin-top: 25px;
+            color: #333;
+        }
+
+        p {
+            line-height: 1.5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        th, td {
+            border: 1px solid #999;
+            padding: 7px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #e9eef5;
+        }
+
+        .summary-box {
+            border: 1px solid #999;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f7f9fc;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 10px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Sky Engineering Directory - Team Report</h1>
+
+<p>
+    This report summarises the organisation data stored in the Sky Project database.
+    The information is taken from the Django admin site and shows how departments,
+    teams, engineers, repositories, contact channels and team dependencies are linked together.
+</p>
+
+<h2>Report Summary</h2>
+
+<div class="summary-box">
+    <p><strong>Total departments:</strong> {{ total_departments }}</p>
+    <p><strong>Total teams:</strong> {{ total_teams }}</p>
+    <p><strong>Total team members:</strong> {{ team_members.count }}</p>
+    <p><strong>Total repositories:</strong> {{ repositories.count }}</p>
+    <p><strong>Total contact channels:</strong> {{ contact_channels.count }}</p>
+    <p><strong>Total team dependencies:</strong> {{ dependencies.count }}</p>
+    <p><strong>Teams without managers:</strong> {{ teams_without_managers_count }}</p>
+</div>
+
+<h2>Department Structure</h2>
+
+<p>
+    The departments organise the teams into main areas of the business. In this project,
+    the departments include Engineering Department, Product department and Internal Services Department.
+    This matches the coursework database design because each team belongs to a department.
+</p>
+
+<table>
+    <tr>
+        <th>Department</th>
+        <th>Description</th>
+        <th>Number of Teams</th>
+    </tr>
+
+    {% for department in departments %}
+    <tr>
+        <td>{{ department.name }}</td>
+        <td>{{ department.description }}</td>
+        <td>{{ department.teams.count }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Team Summary</h2>
+
+<p>
+    This section shows the teams that have been added to the database. It also shows which department
+    each team belongs to and whether the team has a manager, members, repositories and dependencies.
+</p>
+
+<table>
+    <tr>
+        <th>Team Name</th>
+        <th>Department</th>
+        <th>Manager</th>
+        <th>Members</th>
+        <th>Repositories</th>
+        <th>Dependencies</th>
+    </tr>
+
+    {% for team in teams %}
+    <tr>
+        <td>{{ team.name }}</td>
+        <td>{{ team.department.name }}</td>
+        <td>
+            {% if team.manager %}
+                {{ team.manager.engineer.full_name }}
+            {% else %}
+                No manager assigned
+            {% endif %}
+        </td>
+        <td>{{ team.members.count }}</td>
+        <td>{{ team.repositories.count }}</td>
+        <td>{{ team.dependencies.count }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Team Members</h2>
+
+<p>
+    This section shows which engineers are assigned to which teams. This is important because the
+    team member table links engineers to teams and allows each engineer to have a role in the team.
+</p>
+
+<table>
+    <tr>
+        <th>Engineer</th>
+        <th>Team</th>
+        <th>Role in Team</th>
+        <th>Joined At</th>
+    </tr>
+
+    {% for member in team_members %}
+    <tr>
+        <td>{{ member.engineer.full_name }}</td>
+        <td>{{ member.team.name }}</td>
+        <td>{{ member.role_in_team }}</td>
+        <td>{{ member.joined_at }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Team Dependencies</h2>
+
+<p>
+    This section shows the relationships between teams. It helps show which teams rely on other teams
+    for support, systems, data or infrastructure. This links back to the coursework design because team
+    dependencies were part of the organisation structure.
+</p>
+
+<table>
+    <tr>
+        <th>Team</th>
+        <th>Depends On Team</th>
+        <th>Dependency Type</th>
+        <th>Notes</th>
+    </tr>
+
+    {% for dependency in dependencies %}
+    <tr>
+        <td>{{ dependency.team.name }}</td>
+        <td>{{ dependency.depends_on_team.name }}</td>
+        <td>{{ dependency.dependency_type }}</td>
+        <td>{{ dependency.team_notes }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Repositories</h2>
+
+<p>
+    This section shows the repositories linked to teams. This is useful because it shows which teams
+    are responsible for different parts of the system or project work.
+</p>
+
+<table>
+    <tr>
+        <th>Repository</th>
+        <th>Repository Type</th>
+        <th>Team</th>
+    </tr>
+
+    {% for repository in repositories %}
+    <tr>
+        <td>{{ repository.name }}</td>
+        <td>{{ repository.repository_type }}</td>
+        <td>{{ repository.team.name }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Contact Channels</h2>
+
+<p>
+    This section shows the contact methods for teams, such as email or Slack. This improves the directory
+    because users can quickly see how to contact a team.
+</p>
+
+<table>
+    <tr>
+        <th>Team</th>
+        <th>Contact Type</th>
+        <th>Contact Value</th>
+    </tr>
+
+    {% for channel in contact_channels %}
+    <tr>
+        <td>{{ channel.team.name }}</td>
+        <td>{{ channel.type }}</td>
+        <td>{{ channel.value }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Teams Without Managers</h2>
+
+<p>
+    This section highlights teams that do not currently have a manager assigned. This is useful because
+    it shows missing data that could be improved later in the admin dashboard.
+</p>
+
+<table>
+    <tr>
+        <th>Team Name</th>
+        <th>Department</th>
+        <th>Issue</th>
+    </tr>
+
+    {% for team in teams_without_managers %}
+    <tr>
+        <td>{{ team.name }}</td>
+        <td>{{ team.department.name }}</td>
+        <td>No manager assigned</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3">All teams have managers assigned.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<div class="footer">
+    Generated from the Django admin site using the Sky Project database.
+</div>
+
+</body>
+</html>

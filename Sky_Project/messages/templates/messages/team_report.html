@@ -5,27 +5,32 @@
     <title>Team Report</title>
 
     <style>
+        /* basic pdf report styling */
         body {
             font-family: Arial, sans-serif;
             font-size: 12px;
             color: #222;
         }
 
+        /* main report title styling */
         h1 {
             color: #1f4e79;
             border-bottom: 2px solid #1f4e79;
             padding-bottom: 8px;
         }
 
+        /* section heading styling */
         h2 {
             margin-top: 25px;
             color: #333;
         }
 
+        /* improves readability of paragraphs */
         p {
             line-height: 1.5;
         }
 
+        /* table layout used to organise report data clearly */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -33,6 +38,7 @@
             margin-bottom: 15px;
         }
 
+        /* table cell styling */
         th, td {
             border: 1px solid #999;
             padding: 7px;
@@ -40,10 +46,12 @@
             vertical-align: top;
         }
 
+        /* table header styling */
         th {
             background-color: #e9eef5;
         }
 
+        /* summary box highlights key totals in the report */
         .summary-box {
             border: 1px solid #999;
             padding: 10px;
@@ -51,6 +59,7 @@
             background-color: #f7f9fc;
         }
 
+        /* footer styling for generated report note */
         .footer {
             margin-top: 30px;
             font-size: 10px;
@@ -63,6 +72,7 @@
 
 <h1>Sky Engineering Directory - Team Report</h1>
 
+<!-- introduction explaining what the report contains -->
 <p>
     This report summarises the organisation data stored in the Sky Project database.
     The information is taken from the Django admin site and shows how departments,
@@ -71,6 +81,7 @@
 
 <h2>Report Summary</h2>
 
+<!-- summary counts passed from the report view -->
 <div class="summary-box">
     <p><strong>Total departments:</strong> {{ total_departments }}</p>
     <p><strong>Total teams:</strong> {{ total_teams }}</p>
@@ -89,6 +100,7 @@
     This matches the coursework database design because each team belongs to a department.
 </p>
 
+<!-- table showing each department and how many teams it contains -->
 <table>
     <tr>
         <th>Department</th>
@@ -112,6 +124,7 @@
     each team belongs to and whether the team has a manager, members, repositories and dependencies.
 </p>
 
+<!-- table summarising each team -->
 <table>
     <tr>
         <th>Team Name</th>
@@ -147,6 +160,7 @@
     team member table links engineers to teams and allows each engineer to have a role in the team.
 </p>
 
+<!-- table showing engineer membership details -->
 <table>
     <tr>
         <th>Engineer</th>
@@ -173,6 +187,7 @@
     dependencies were part of the organisation structure.
 </p>
 
+<!-- table showing dependencies between teams -->
 <table>
     <tr>
         <th>Team</th>
@@ -198,6 +213,7 @@
     are responsible for different parts of the system or project work.
 </p>
 
+<!-- table showing team repositories -->
 <table>
     <tr>
         <th>Repository</th>
@@ -221,6 +237,7 @@
     because users can quickly see how to contact a team.
 </p>
 
+<!-- table showing contact methods for teams -->
 <table>
     <tr>
         <th>Team</th>
@@ -244,6 +261,7 @@
     it shows missing data that could be improved later in the admin dashboard.
 </p>
 
+<!-- table showing missing manager data -->
 <table>
     <tr>
         <th>Team Name</th>
@@ -264,6 +282,7 @@
     {% endfor %}
 </table>
 
+<!-- footer note for the generated report -->
 <div class="footer">
     Generated from the Django admin site using the Sky Project database.
 </div>

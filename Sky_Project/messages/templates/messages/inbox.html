@@ -5,12 +5,15 @@
 {% block messages_content %}
 <h1 class="mb-4">Inbox</h1>
 
+<!-- lists messages received by the logged-in user -->
 <div class="list-group">
     {% for message in inbox_messages %}
+        <!-- each message links to its full message detail page -->
         <a href="{% url 'messages:message_detail' message.id %}" class="list-group-item list-group-item-action">
             <strong>{{ message.sender.username }}</strong> - {{ message.subject }}
         </a>
     {% empty %}
+        <!-- shown when the inbox has no messages -->
         <div class="list-group-item text-center text-muted">
             No messages found.
         </div>

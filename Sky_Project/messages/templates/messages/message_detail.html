@@ -5,19 +5,23 @@
 {% block messages_content %}
 <h1 class="mb-4">{{ message.subject }}</h1>
 
+<!-- card layout shows the full details of one selected message -->
 <div class="card">
     <div class="card-body">
+
+        <!-- message metadata -->
         <p><strong>From:</strong> {{ message.sender.username }}</p>
         <p><strong>To:</strong> {{ message.recipient.username }}</p>
         <p><strong>Date:</strong> {{ message.created_at }}</p>
 
         <hr>
 
+        <!-- main message body -->
         <p>{{ message.body }}</p>
 
         <hr>
 
-        <!-- Draft actions -->
+        <!-- draft actions only show if the message is a draft and belongs to the logged-in user -->
         {% if message.is_draft and message.sender == user %}
             <a href="{% url 'messages:edit_draft' message.id %}" class="btn btn-warning me-2">
                 Edit Draft
@@ -28,7 +32,7 @@
             </a>
         {% endif %}
 
-        <!-- Delete button (available for sender or recipient) -->
+        <!-- delete button shows only if the logged-in user is linked to the message -->
         {% if message.sender == user or message.recipient == user %}
             <a href="{% url 'messages:delete_message' message.id %}" class="btn btn-outline-danger">
                 Delete Message

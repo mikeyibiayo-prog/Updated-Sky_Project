@@ -1,24 +1,30 @@
+/* sets the background colour of the whole page */
 body {
-    background-color: #f8f9fa;
+    background-color: #f8f9fa; /* light grey background to make content easier to read */
 }
 
+/* styles all main headings */
 h1 {
-    font-weight: 700;
+    font-weight: 700; /* makes headings bold for better visibility */
 }
 
+/* styles the brand name in the navbar */
 .navbar-brand {
-    font-weight: bold;
+    font-weight: bold; /* makes the title stand out */
 }
 
+/* styles card components used in the layout */
 .card {
-    border-radius: 12px;
+    border-radius: 12px; /* rounds the corners to make the UI look smoother */
 }
 
+/* styles links inside list group items */
 .list-group-item a {
-    text-decoration: none;
-    color: black;
+    text-decoration: none; /* removes underline from links */
+    color: black; /* sets default link colour */
 }
 
+/* changes link colour when hovered over */
 .list-group-item a:hover {
-    color: #0d6efd;
+    color: #0d6efd; /* blue highlight to show interactivity */
 }

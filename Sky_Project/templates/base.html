@@ -2,39 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <!-- ensures the page scales properly on different screen sizes -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- allows each page to have its own title -->
     <title>{% block title %}Sky Project{% endblock %}</title>
 
+    <!-- loads Django static files (used for css, images etc) -->
     {% load static %}
+
+    <!-- Bootstrap CSS for layout and styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- custom css file for project styling -->
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
 
+    <!-- navigation bar shown on every page -->
     <nav class="navbar navbar-expand-lg bg-light border-bottom">
         <div class="container">
+
+            <!-- site title that links to inbox -->
             <a class="navbar-brand fw-bold" href="{% url 'messages:inbox' %}">Sky Project</a>
 
             <div class="ms-auto">
+
+                <!-- checks if user is logged in -->
                 {% if user.is_authenticated %}
+
+                    <!-- displays username -->
                     <span class="me-3">Hello, {{ user.username }}</span>
 
+                    <!-- shows admin button only for admin users -->
                     {% if user.is_staff %}
                         <a href="/admin/" class="btn btn-sm btn-outline-dark me-2">Admin</a>
                     {% endif %}
 
+                    <!-- logout button -->
                     <a href="{% url 'logout' %}" class="btn btn-sm btn-danger">Logout</a>
+
                 {% else %}
+
+                    <!-- login and signup buttons for users not logged in -->
                     <a href="{% url 'login' %}" class="btn btn-sm btn-primary me-2">Login</a>
                     <a href="{% url 'signup' %}" class="btn btn-sm btn-success">Sign Up</a>
+
                 {% endif %}
             </div>
         </div>
     </nav>
 
+    <!-- displays success or error messages after actions -->
     {% if messages %}
         <div class="container mt-3">
             {% for message in messages %}
+
+                <!-- alert box changes colour depending on message type -->
                 <div class="alert 
                     {% if message.tags == 'error' %}alert-danger
                     {% elif message.tags == 'success' %}alert-success
@@ -42,19 +67,24 @@
                     {% endif %}
                     alert-dismissible fade show" role="alert">
 
+                    <!-- message text -->
                     {{ message }}
 
+                    <!-- button to close alert -->
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
+
             {% endfor %}
         </div>
     {% endif %}
 
+    <!-- main content area where each page inserts its content -->
     <div class="container mt-4">
         {% block content %}
         {% endblock %}
     </div>
 
+    <!-- Bootstrap JavaScript for interactive elements -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
