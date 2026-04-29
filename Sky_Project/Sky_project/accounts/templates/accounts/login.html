@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<!-- centres the login form on the page -->
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+
+        <!-- card layout makes the login form clearer and more readable -->
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h2 mb-4">Login</h1>
+
+                <!-- login form sends username and password to the login view -->
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        Log In
+                    </button>
+                </form>
+
+                <!-- link to password reset page -->
+                <p class="mt-3 text-center">
+                    <a href="{% url 'password_reset' %}">Forgot password?</a>
+                </p>
+
+                <!-- link to sign up page for new users -->
+                <p class="mt-3 mb-0 text-center">
+                    Don’t have an account?
+                    <a href="{% url 'signup' %}">Sign up here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

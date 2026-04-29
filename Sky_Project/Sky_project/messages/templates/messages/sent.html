@@ -1,0 +1,22 @@
+{% extends "messages/base_messages.html" %}
+
+{% block title %}Sent{% endblock %}
+
+{% block messages_content %}
+<h1 class="mb-4">Sent</h1>
+
+<!-- lists messages sent by the logged-in user -->
+<div class="list-group">
+    {% for message in sent_messages %}
+        <!-- each sent message links to the full message detail page -->
+        <a href="{% url 'messages:message_detail' message.id %}" class="list-group-item list-group-item-action">
+            <strong>To: {{ message.recipient.username }}</strong> - {{ message.subject }}
+        </a>
+    {% empty %}
+        <!-- shown when there are no sent messages -->
+        <div class="list-group-item text-center text-muted">
+            No sent messages found.
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

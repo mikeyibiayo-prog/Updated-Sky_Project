@@ -1,0 +1,42 @@
+{% extends "messages/base_messages.html" %}
+
+{% block title %}New Message{% endblock %}
+
+{% block messages_content %}
+<h1 class="mb-4">New Message</h1>
+
+<!-- form used to create a new message or save it as a draft -->
+<form method="POST">
+    {% csrf_token %}
+
+    <!-- recipient username entered by the sender -->
+    <div class="mb-3">
+        <label class="form-label">Recipient (username)</label>
+        <input type="text" name="recipient" class="form-control" required>
+    </div>
+
+    <!-- message subject field -->
+    <div class="mb-3">
+        <label class="form-label">Subject</label>
+        <input type="text" name="subject" class="form-control" required>
+    </div>
+
+    <!-- main message content field -->
+    <div class="mb-3">
+        <label class="form-label">Message</label>
+        <textarea name="body" class="form-control" rows="4" required></textarea>
+    </div>
+
+    <!-- checkbox lets the user save the message as a draft instead of sending it -->
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" name="is_draft" id="is_draft">
+        <label class="form-check-label" for="is_draft">
+            Save as draft
+        </label>
+    </div>
+
+    <!-- submits the form -->
+    <button type="submit" class="btn btn-primary w-100">Submit</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <!-- includes the messages navigation bar used across inbox, sent, draft and new message pages -->
+    {% include "messages/navbar.html" %}
+
+    <!-- search area aligned to the right of the messages pages -->
+    <div class="d-flex justify-content-end mb-1">
+        <form 
+            method="GET" 
+            action="{% url 'messages:search_messages' %}" 
+            class="d-flex position-relative" 
+            style="max-width: 400px; width: 100%;"
+            id="searchForm"
+        >
+
+            <!-- search input keeps the current query in the box after searching -->
+            <input 
+                class="form-control me-2" 
+                type="search" 
+                name="query" 
+                id="searchInput"
+                placeholder="Search messages..." 
+                value="{{ request.GET.query }}"
+                autocomplete="off"
+                required
+            >
+
+            <!-- submits the search form -->
+            <button class="btn btn-outline-primary" type="submit">
+                Search
+            </button>
+
+            <!-- box used to display live search suggestions -->
+            <div 
+                id="suggestionsBox" 
+                class="list-group position-absolute"
+                style="top: 42px; left: 0; width: 315px; z-index: 1000;">
+            </div>
+
+        </form>
+    </div>
+
+    <!-- child templates insert their own message page content here -->
+    {% block messages_content %}
+    {% endblock %}
+
+    <script>
+        // gets the search input and suggestions box from the page
+        const searchInput = document.getElementById("searchInput");
+        const suggestionsBox = document.getElementById("suggestionsBox");
+
+        // runs every time the user types in the search box
+        searchInput.addEventListener("input", function () {
+            const query = searchInput.value.trim();
+
+            // clears suggestions if nothing has been typed
+            if (query.length < 1) {
+                suggestionsBox.innerHTML = "";
+                return;
+            }
+
+            // sends the typed query to the search suggestions view
+            fetch(`/search-suggestions/?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsBox.innerHTML = "";
+
+                    // creates clickable suggestion links from the returned data
+                    data.suggestions.forEach(item => {
+                        const option = document.createElement("a");
+                        option.className = "list-group-item list-group-item-action";
+                        option.textContent = item;
+                        option.href = `/search/?query=${encodeURIComponent(item)}`;
+                        suggestionsBox.appendChild(option);
+                    });
+                });
+        });
+
+        // hides the suggestions when the user clicks outside the search form
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest("#searchForm")) {
+                suggestionsBox.innerHTML = "";
+            }
+        });
+    </script>
+
+{% endblock %}

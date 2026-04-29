@@ -1,0 +1,15 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools-items %}
+    {{ block.super }}
+    <!-- keeps the default admin interface buttons -->
+
+    <li>
+        <!-- custom button added to allow admin users to view message statistics -->
+        <!-- this connects to a custom admin view that shows message data such as totals or trends -->
+        <!-- the url name 'admin:message_stats' must be configured in admin.py -->
+        <a href="{% url 'admin:message_stats' %}" class="button">
+            View Message Stats
+        </a>
+    </li>
+{% endblock %}
