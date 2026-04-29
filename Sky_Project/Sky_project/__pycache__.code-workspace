@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "__pycache__"
+		},
+		{
+			"path": "messages"
+		},
+		{
+			"path": "Sky_project"
+		},
+		{
+			"path": "static"
+		},
+		{
+			"path": "templates"
+		}
+	]
+}
