@@ -1,0 +1,409 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Schedule — Sky Portal{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --sky-navy: #233566;
+    --sky-mid:  #354a8e;
+    --sky-dim:  #a5b4d3;
+    --border:   #e2e8f0;
+    --surface:  #ffffff;
+    --surface-2:#f8fafc;
+    --text-1:   #1e293b;
+    --text-2:   #475569;
+    --text-3:   #94a3b8;
+    --blue-soft:#dbeafe;
+    --blue-text:#1d4ed8;
+    --green-soft:#dcfce7;
+    --green-text:#166534;
+    --red-soft: #fee2e2;
+    --red-text: #b91c1c;
+  }
+
+  .topbar {
+    background:#fff; border-bottom:1px solid var(--border);
+    padding:0 24px; height:56px;
+    display:flex; align-items:center; justify-content:space-between;
+    margin:-16px -16px 16px -16px;
+  }
+  .topbar-title { font-weight:700; font-size:1rem; color:var(--text-1); }
+  .topbar-subtitle { font-size:0.78rem; color:var(--text-3); margin-top:1px; }
+  .btn-new {
+    background:var(--sky-navy); color:#fff; border:none; border-radius:8px;
+    padding:8px 16px; font-size:0.82rem; font-weight:600; cursor:pointer;
+    text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+    transition:opacity 0.15s;
+  }
+  .btn-new:hover { opacity:0.88; color:#fff; }
+
+  .schedule-grid {
+    display:grid; grid-template-columns:280px 1fr 280px; gap:12px;
+  }
+  .panel {
+    background:var(--surface); border-radius:12px; border:1px solid var(--border);
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  .panel-head {
+    padding:12px 14px; border-bottom:1px solid var(--border);
+    background:var(--surface-2);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .panel-head-label {
+    font-size:0.72rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.07em; color:var(--text-3);
+  }
+  .panel-body { flex:1; overflow-y:auto; }
+
+  /* Meeting rows */
+  .meeting-row {
+    padding:11px 14px; border-bottom:1px solid #f8fafc;
+    cursor:pointer; transition:background 0.12s; border-left:3px solid transparent;
+  }
+  .meeting-row:hover { background:#f8fafc; }
+  .meeting-row.active { background:#eff6ff; border-left-color:var(--sky-navy); }
+  .meeting-row-title {
+    font-size:0.85rem; font-weight:600; color:var(--text-1); margin-bottom:3px;
+    display:flex; align-items:flex-start; justify-content:space-between; gap:8px;
+  }
+  .meeting-row-meta { font-size:0.76rem; color:var(--text-3); line-height:1.5; }
+
+  .badge-upcoming {
+    background:var(--blue-soft); color:var(--blue-text);
+    font-size:0.65rem; font-weight:700; padding:2px 7px;
+    border-radius:20px; white-space:nowrap; flex-shrink:0;
+  }
+  .badge-done {
+    background:#f1f5f9; color:var(--text-3);
+    font-size:0.65rem; font-weight:700; padding:2px 7px;
+    border-radius:20px; white-space:nowrap; flex-shrink:0;
+  }
+
+  /* Calendar */
+  .cal-nav {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:11px 14px; border-bottom:1px solid var(--border);
+  }
+  .cal-month { font-weight:700; font-size:0.88rem; color:var(--text-1); }
+  .cal-btn {
+    background:none; border:1px solid var(--border); border-radius:6px;
+    padding:3px 10px; font-size:0.75rem; font-weight:600; cursor:pointer;
+    color:var(--sky-navy); transition:background 0.12s;
+  }
+  .cal-btn:hover { background:var(--surface-2); }
+  .cal-wrap { padding:10px 10px 0; }
+  .cal-table { width:100%; border-collapse:collapse; }
+  .cal-table th {
+    text-align:center; font-size:0.65rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.06em; color:var(--text-3); padding:0 0 8px;
+  }
+  .cal-table td { text-align:center; padding:3px 0; }
+  .cal-day {
+    width:28px; height:28px; line-height:28px; border-radius:50%;
+    margin:0 auto; font-size:0.78rem; color:var(--text-2);
+    display:block; position:relative; cursor:default;
+  }
+  .cal-day.has-mtg { font-weight:700; color:var(--text-1); cursor:pointer; }
+  .cal-day.has-mtg::after {
+    content:""; position:absolute; bottom:1px; left:50%;
+    transform:translateX(-50%); width:4px; height:4px;
+    border-radius:50%; background:var(--sky-navy);
+  }
+  .cal-day.is-today { background:var(--sky-navy); color:#fff; font-weight:700; }
+  .cal-day.is-today::after { background:#93c5fd; }
+  .cal-legend {
+    display:flex; gap:14px; padding:10px 10px 12px;
+    font-size:0.7rem; color:var(--text-3);
+  }
+  .leg-dot {
+    width:8px; height:8px; border-radius:50%;
+    display:inline-block; margin-right:4px; vertical-align:middle;
+  }
+
+  /* Summary strip */
+  .summary-strip {
+    border-top:1px solid var(--border); padding:10px 14px; display:flex; gap:20px;
+  }
+  .sum-item { font-size:0.75rem; color:var(--text-3); line-height:1.3; }
+  .sum-item strong { display:block; font-size:1rem; color:var(--text-1); font-weight:700; }
+  .sum-bar { height:3px; border-radius:2px; background:var(--border); margin-top:6px; overflow:hidden; }
+  .sum-bar-fill { height:100%; background:var(--sky-navy); border-radius:2px; }
+
+  /* Detail panel */
+  .detail-section { padding:14px; border-bottom:1px solid #f8fafc; }
+  .detail-label {
+    font-size:0.65rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.07em; color:var(--text-3); margin-bottom:3px;
+  }
+  .detail-value { font-size:0.85rem; color:var(--text-1); margin-bottom:10px; line-height:1.4; }
+  .detail-value:last-child { margin-bottom:0; }
+
+  .participant-pill {
+    display:flex; align-items:center; gap:8px; padding:6px 8px;
+    background:var(--surface-2); border:1px solid var(--border);
+    border-radius:8px; margin-bottom:5px;
+  }
+  .p-avatar {
+    width:26px; height:26px; border-radius:50%; display:flex;
+    align-items:center; justify-content:center; font-size:0.7rem;
+    font-weight:700; color:#fff; flex-shrink:0;
+    background: var(--sky-navy);
+  }
+  .p-name { font-size:0.8rem; font-weight:600; color:var(--text-1); }
+  .p-role { font-size:0.7rem; color:var(--text-3); }
+
+  /* Action buttons */
+  .action-btn {
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    width:100%; padding:9px; border-radius:8px; font-size:0.82rem;
+    font-weight:600; text-decoration:none; border:none; cursor:pointer;
+    margin-bottom:6px; transition:opacity 0.13s;
+  }
+  .action-btn:hover { opacity:0.88; }
+  .action-btn:last-child { margin-bottom:0; }
+  .btn-primary-act { background:var(--sky-navy); color:#fff; }
+  .btn-edit-act    { background:var(--blue-soft); color:var(--blue-text); }
+  .btn-del-act     { background:var(--red-soft);  color:var(--red-text);  }
+  .btn-dupe-act    { background:var(--surface-2); color:var(--text-2); border:1px solid var(--border) !important; }
+
+  .join-link {
+    display:inline-flex; align-items:center; gap:5px;
+    color:var(--blue-text); font-size:0.82rem; font-weight:600; text-decoration:none;
+  }
+  .join-link:hover { text-decoration:underline; }
+
+  .notes-box {
+    background:var(--surface-2); border:1px solid var(--border); border-radius:8px;
+    padding:9px 11px; font-size:0.8rem; color:var(--text-2); line-height:1.5;
+  }
+  .platform-tag {
+    display:inline-flex; align-items:center; gap:5px; background:var(--surface-2);
+    border:1px solid var(--border); border-radius:6px; padding:3px 9px;
+    font-size:0.78rem; font-weight:600; color:var(--text-2);
+  }
+  .panel-body::-webkit-scrollbar { width:4px; }
+  .panel-body::-webkit-scrollbar-track { background:transparent; }
+  .panel-body::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+  .empty-state { padding:24px; text-align:center; color:var(--text-3); font-size:0.82rem; }
+</style>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div>
+    <div class="topbar-title">Schedule — <span id="topbar-month"></span></div>
+    <div class="topbar-subtitle" id="topbar-sub">{{ meetings|length }} meeting{{ meetings|length|pluralize }} total</div>
+  </div>
+  <div>
+    <a href="{% url 'schedule:create_meeting' %}" class="btn-new">+ New Meeting</a>
+  </div>
+</div>
+
+<!-- Pass Django meetings data to JS -->
+<script>
+  const MEETINGS = [
+    {% for m in meetings %}
+    {
+      id: {{ m.id }},
+      title: "{{ m.title|escapejs }}",
+      date: "{{ m.date|date:'Y-m-d' }}",
+      timeStart: "{{ m.time_start|time:'H:i' }}",
+      timeEnd: "{{ m.time_end|time:'H:i' }}",
+      platform: "{{ m.platform|escapejs }}",
+      joinLink: "{{ m.join_link|default:''|escapejs }}",
+      notes: "{{ m.notes|escapejs }}",
+      status: "{% if m.date >= today %}upcoming{% else %}done{% endif %}",
+      canEdit: {% if m.organiser == request.user %}true{% else %}false{% endif %},
+      editUrl: "{% url 'schedule:edit_meeting' m.id %}",
+      participants: [
+        {% for p in m.participants.all %}
+        { name: "{{ p.get_full_name|default:p.username|escapejs }}", role: "{{ p.username|escapejs }}" }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+</script>
+
+<div class="schedule-grid">
+  <!-- Panel 1: Meeting list -->
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-head-label">Meetings</span>
+      <span style="font-size:0.72rem;color:var(--text-3);" id="meetings-count"></span>
+    </div>
+    <div class="panel-body" id="meetings-list"></div>
+  </div>
+
+  <!-- Panel 2: Calendar -->
+  <div class="panel" style="overflow:hidden;">
+    <div class="panel-head">
+      <span class="panel-head-label">Calendar View</span>
+    </div>
+    <div class="cal-nav">
+      <button class="cal-btn" onclick="prevMonth()">‹ Prev</button>
+      <span class="cal-month" id="cal-label"></span>
+      <button class="cal-btn" onclick="nextMonth()">Next ›</button>
+    </div>
+    <div class="panel-body" style="overflow:hidden;">
+      <div class="cal-wrap">
+        <table class="cal-table" id="cal-table"></table>
+      </div>
+      <div class="cal-legend">
+        <span><span class="leg-dot" style="background:var(--sky-navy);"></span>Has meeting</span>
+        <span><span class="leg-dot" style="background:var(--sky-navy);opacity:0.4;border:2px solid var(--sky-navy);"></span>Today</span>
+      </div>
+      <div class="summary-strip" id="summary-strip">
+        <div class="sum-item"><strong id="sum-total">0</strong>Total</div>
+        <div class="sum-item"><strong id="sum-upcoming">0</strong>Upcoming</div>
+        <div class="sum-item" style="flex:1;">
+          <div class="sum-bar"><div class="sum-bar-fill" id="sum-bar-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 3: Detail -->
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-head-label">Meeting Details</span>
+      <span id="detail-badge"></span>
+    </div>
+    <div class="panel-body" id="detail-panel">
+      <div class="empty-state">Select a meeting to view details.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const today = new Date();
+  let currentMonth = today.getMonth();
+  let currentYear  = today.getFullYear();
+  let selectedId   = MEETINGS.length ? MEETINGS[0].id : null;
+
+  function platformIcon(p) {
+    return {Zoom:'🔵','Microsoft Teams':'🟣','Google Meet':'🟢','In Person':'🏢'}[p] || '📍';
+  }
+  function formatDate(s) {
+    const d = new Date(s + 'T00:00:00');
+    return `${DAY_NAMES[d.getDay()]}, ${MONTH_NAMES[d.getMonth()]} ${d.getDate()}`;
+  }
+
+  function renderList() {
+    const el = document.getElementById('meetings-list');
+    document.getElementById('meetings-count').textContent = MEETINGS.length + ' total';
+    const total    = MEETINGS.length;
+    const upcoming = MEETINGS.filter(m => m.status === 'upcoming').length;
+    document.getElementById('sum-total').textContent    = total;
+    document.getElementById('sum-upcoming').textContent = upcoming;
+    document.getElementById('sum-bar-fill').style.width = total ? (upcoming/total*100)+'%' : '0%';
+    document.getElementById('topbar-month').textContent = MONTH_NAMES[currentMonth] + ' ' + currentYear;
+
+    if (!MEETINGS.length) { el.innerHTML = '<div class="empty-state">No meetings yet.</div>'; return; }
+    el.innerHTML = MEETINGS.map(m => `
+      <div class="meeting-row${m.id === selectedId ? ' active' : ''}" onclick="selectMeeting(${m.id})">
+        <div class="meeting-row-title">
+          <span>${m.title}</span>
+          <span class="${m.status === 'upcoming' ? 'badge-upcoming' : 'badge-done'}">${m.status === 'upcoming' ? 'Upcoming' : 'Done'}</span>
+        </div>
+        <div class="meeting-row-meta">${formatDate(m.date)} &bull; ${m.timeStart}–${m.timeEnd} &bull; ${m.platform}</div>
+      </div>`).join('');
+  }
+
+  function renderCalendar() {
+    document.getElementById('cal-label').textContent = MONTH_NAMES[currentMonth] + ' ' + currentYear;
+    const firstDay   = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const meetingDays = new Set();
+    MEETINGS.forEach(m => {
+      const d = new Date(m.date + 'T00:00:00');
+      if (d.getFullYear() === currentYear && d.getMonth() === currentMonth) meetingDays.add(d.getDate());
+    });
+    const table = document.getElementById('cal-table');
+    let html = '<thead><tr>' + DAY_NAMES.map(d => `<th>${d}</th>`).join('') + '</tr></thead><tbody>';
+    let day = 1;
+    for (let week = 0; week < 6; week++) {
+      if (day > daysInMonth) break;
+      html += '<tr>';
+      for (let col = 0; col < 7; col++) {
+        if ((week === 0 && col < firstDay) || day > daysInMonth) { html += '<td></td>'; }
+        else {
+          const isToday = currentYear === today.getFullYear() && currentMonth === today.getMonth() && day === today.getDate();
+          const hasMtg  = meetingDays.has(day);
+          const cls = ['cal-day', hasMtg ? 'has-mtg' : '', isToday ? 'is-today' : ''].filter(Boolean).join(' ');
+          html += `<td><span class="${cls}"${hasMtg ? ` onclick="jumpToDay(${day})"` : ''}>${day}</span></td>`;
+          day++;
+        }
+      }
+      html += '</tr>';
+    }
+    html += '</tbody>';
+    table.innerHTML = html;
+  }
+
+  function renderDetail(m) {
+    document.getElementById('detail-badge').innerHTML =
+      m.status === 'upcoming' ? '<span class="badge-upcoming">Upcoming</span>' : '<span class="badge-done">Done</span>';
+    const pHtml = m.participants.map(p => `
+      <div class="participant-pill">
+        <div class="p-avatar">${p.name.charAt(0).toUpperCase()}</div>
+        <div><div class="p-name">${p.name}</div><div class="p-role">${p.role}</div></div>
+      </div>`).join('') || '<span style="color:var(--text-3);font-size:0.8rem;">No participants listed.</span>';
+    const linkHtml = m.joinLink
+      ? `<a href="${m.joinLink}" target="_blank" class="join-link">↗ Join Meeting</a>`
+      : '<span style="color:var(--text-3);font-size:0.8rem;">No link provided</span>';
+    const notesHtml = m.notes
+      ? `<div class="notes-box">${m.notes}</div>`
+      : '<span style="color:var(--text-3);font-size:0.8rem;">No notes.</span>';
+    const editHtml = m.canEdit
+      ? `<a href="${m.editUrl}" class="action-btn btn-edit-act">✏ Edit Meeting</a>` : '';
+
+    document.getElementById('detail-panel').innerHTML = `
+      <div class="detail-section">
+        <div class="detail-label">Title</div><div class="detail-value" style="font-weight:700;">${m.title}</div>
+        <div class="detail-label">Date</div><div class="detail-value">${formatDate(m.date)}</div>
+        <div class="detail-label">Time</div><div class="detail-value">${m.timeStart} – ${m.timeEnd}</div>
+        <div class="detail-label">Platform</div>
+        <div class="detail-value"><span class="platform-tag">${platformIcon(m.platform)} ${m.platform}</span></div>
+        <div class="detail-label">Link</div><div class="detail-value">${linkHtml}</div>
+        <div class="detail-label">Notes / Agenda</div><div class="detail-value">${notesHtml}</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label" style="margin-bottom:8px;">Participants (${m.participants.length})</div>
+        ${pHtml}
+      </div>
+      <div class="detail-section">
+        <div class="detail-label" style="margin-bottom:8px;">Actions</div>
+        <a href="{% url 'schedule:create_meeting' %}" class="action-btn btn-primary-act">+ New Meeting</a>
+        ${editHtml}
+      </div>`;
+  }
+
+  function selectMeeting(id) {
+    selectedId = id;
+    renderList();
+    const m = MEETINGS.find(x => x.id === id);
+    if (m) renderDetail(m);
+  }
+  function prevMonth() {
+    currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar();
+  }
+  function nextMonth() {
+    currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar();
+  }
+  function jumpToDay(day) {
+    const m = MEETINGS.find(m => {
+      const d = new Date(m.date + 'T00:00:00');
+      return d.getFullYear() === currentYear && d.getMonth() === currentMonth && d.getDate() === day;
+    });
+    if (m) selectMeeting(m.id);
+  }
+
+  renderList();
+  renderCalendar();
+  if (selectedId) selectMeeting(selectedId);
+</script>
+{% endblock %}

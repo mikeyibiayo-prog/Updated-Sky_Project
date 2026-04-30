@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Team Directory{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'teams/teams.css' %}">
+
+
+<section class="teams-wrap">
+  <div class="teams-head">
+    <h1>Team Directory</h1>
+    <span class="teams-user">{% if user.is_authenticated %}{{ user.username }}{% else %}Sarah Johnson{% endif %}</span>
+  </div>
+
+  <div class="teams-tools">
+    <input class="form-control teams-search" type="search" placeholder="Search teams..." data-team-search>
+    <span>All Departments</span>
+    <span>Sort by Name</span>
+  </div>
+
+  <article class="team-row" data-team-row>
+    <div><a class="team-name" href="{% url 'teams:profile' %}">Frontend Development</a><div class="muted">John Thompson</div></div>
+    <div>12 Members</div><div>8 Repositories</div><div class="status active-status">Active</div>
+    <a class="outline-action" href="{% url 'teams:profile' %}">Contact</a>
+  </article>
+  <article class="team-row" data-team-row>
+    <div><a class="team-name" href="{% url 'teams:profile' %}">Backend Services</a><div class="muted">Lee Chen</div></div>
+    <div>20 Members</div><div>14 Repositories</div><div class="status inactive-status">Inactive</div>
+    <a class="outline-action" href="{% url 'teams:profile' %}">Contact</a>
+  </article>
+  <article class="team-row" data-team-row>
+    <div><a class="team-name" href="{% url 'teams:profile' %}">Backend Services</a><div class="muted">Dan Rover</div></div>
+    <div>9 Members</div><div>5 Repositories</div><div class="status active-status">Active</div>
+    <a class="outline-action" href="{% url 'teams:profile' %}">Contact</a>
+  </article>
+</section>
+<script src="{% static 'teams/teams.js' %}"></script>
+{% endblock %}

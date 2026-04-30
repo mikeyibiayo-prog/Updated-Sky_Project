@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Team Profile{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'teams/teams.css' %}">
+
+
+<section class="teams-wrap">
+  <div class="teams-head">
+    <a class="back-link" href="{% url 'teams:directory' %}">← Team Profile</a>
+    <span class="teams-user">{% if user.is_authenticated %}{{ user.username }}{% else %}Sarah Johnson{% endif %}</span>
+  </div>
+
+  <h1 class="profile-title">Frontend Development Team</h1>
+  <p class="muted">Sarah Johnson - Engineering Manager</p>
+  <div class="profile-actions">
+    <a class="blue-btn" href="#" data-open="email">Email Team</a>
+    <a class="white-btn" href="#" data-open="schedule">Schedule Meeting</a>
+  </div>
+
+  <nav class="tabs">
+    <a class="tab active" href="#" data-tab="overview">Overview</a>
+    <a class="tab" href="#" data-tab="members">Members</a>
+    <a class="tab" href="#" data-tab="repositories">Repositories</a>
+    <a class="tab" href="#" data-tab="dependencies">Dependencies</a>
+  </nav>
+
+  <div class="grid">
+    <main>
+      <section class="panel active" data-panel="overview">
+        <div class="cardbox"><p><strong>Department:</strong> Global Apps Engineering</p><p class="mb-0"><strong>Location:</strong> London, UK</p></div>
+        <div class="metrics"><div class="metric"><div class="num">10</div><div class="muted">Active Projects</div></div><div class="metric"><div class="num">9</div><div class="muted">Team Members</div></div><div class="metric"><div class="num">5</div><div class="muted">Repositories</div></div></div>
+      </section>
+
+      <section class="panel" data-panel="email">
+        <div class="cardbox">
+          <h2>Send Quick Email</h2>
+          <p><strong>Frontend Team</strong> (9 Members)</p>
+          <form id="team-email-form">
+            <input class="form-control mb-2" id="team-email-subject" placeholder="Subject:" required>
+            <div class="formgrid">
+              <textarea class="form-control" id="team-email-message" placeholder="Message:" required></textarea>
+              <button class="btn btn-primary" type="submit">Send Message</button>
+            </div>
+          </form>
+          <div class="success-note" id="team-email-success" hidden>Message added to Team Messages.</div>
+        </div>
+        <div class="cardbox">
+          <div class="section-title-row"><h2>Team Messages</h2><button class="clear-link" type="button" data-clear-team-messages>Clear</button></div>
+          <div id="team-messages-list" class="activity-list"></div>
+        </div>
+        <div class="metrics"><div class="metric"><div class="num">10</div><div class="muted">Active Projects</div></div><div class="metric"><div class="num">9</div><div class="muted">Team Members</div></div><div class="metric"><div class="num">5</div><div class="muted">Repositories</div></div></div>
+      </section>
+
+      <section class="panel" data-panel="schedule">
+        <div class="cardbox">
+          <h2>Schedule Meeting</h2>
+          <form id="team-schedule-form">
+            <label>Date & Time</label>
+            <div class="row g-2 mb-2"><div class="col"><input class="form-control" id="team-meeting-date" type="date" required></div><div class="col"><input class="form-control" id="team-meeting-time" type="time" required></div></div>
+            <input class="form-control mb-2" id="team-meeting-platform" placeholder="Platform:" required>
+            <textarea class="form-control mb-2" id="team-meeting-message" placeholder="Message:" required></textarea>
+            <button class="btn btn-primary" type="submit">Add Meeting</button>
+          </form>
+          <div class="success-note" id="team-schedule-success" hidden>Meeting added to Team Meeting Schedules.</div>
+        </div>
+        <div class="cardbox">
+          <div class="section-title-row"><h2>Team Meeting Schedules</h2><button class="clear-link" type="button" data-clear-team-meetings>Clear</button></div>
+          <div id="team-meetings-list" class="activity-list"></div>
+        </div>
+        <div class="metrics"><div class="metric"><div class="num">10</div><div class="muted">Active Projects</div></div><div class="metric"><div class="num">9</div><div class="muted">Team Members</div></div><div class="metric"><div class="num">5</div><div class="muted">Repositories</div></div></div>
+      </section>
+
+      <section class="panel" data-panel="members">
+        <div class="filters" data-target="[data-member-card]"><button class="pill active" data-filter="all" type="button">All Roles</button><button class="pill" data-filter="engineer" type="button">Engineers</button><button class="pill" data-filter="designer" type="button">Designers</button><button class="pill" data-filter="product" type="button">Product</button><input class="form-control ms-auto" style="max-width:260px" placeholder="Search"></div>
+        <div class="member-grid">
+          <div class="cardbox" data-member-card data-role="engineer"><div class="avatar"></div><strong>Sarah Johnson</strong><div>Engineering Manager</div><div>sarah@sky.com</div><div>020 7000 1111</div><span class="tag">React</span><span class="tag">JS</span></div>
+          <div class="cardbox" data-member-card data-role="engineer"><div class="avatar"></div><strong>Tom Williams</strong><div>Frontend Engineer</div><div>tom@sky.com</div><div>020 7000 2222</div><span class="tag">Vue</span><span class="tag">CSS</span></div>
+          <div class="cardbox" data-member-card data-role="designer"><div class="avatar"></div><strong>Aisha Khan</strong><div>UI Designer</div><div>aisha@sky.com</div><div>020 7000 3333</div><span class="tag">Figma</span><span class="tag">UX</span></div>
+        </div>
+      </section>
+
+      <section class="panel" data-panel="repositories">
+        <div class="filters"><span class="pill active">Sort by: Last Updated</span><input class="form-control ms-auto" style="max-width:260px" placeholder="Search"></div>
+        <article class="cardbox repo"><h3>Sky-frontend-components</h3><p>Core component library for Sky's frontend application</p><span class="tag">Frontend</span><span class="tag">React</span><span class="tag">TypeScript</span></article>
+        <article class="cardbox repo"><h3>Sky-design-system</h3><p>Documentation and guidelines for Sky's design system</p><span class="tag">Docs</span><span class="tag">Design</span><span class="tag">Guidelines</span></article>
+      </section>
+
+      <section class="panel" data-panel="dependencies">
+        <div class="filters" data-target="[data-dep-card]"><button class="pill active" data-filter="all" type="button">All Dependencies</button><button class="pill" data-filter="upstream" type="button">Upstream</button><button class="pill" data-filter="downstream" type="button">Downstream</button><input class="form-control ms-auto" style="max-width:260px" placeholder="Search"></div>
+        <div class="dep-row dep-head"><div>Team Name</div><div>Type</div><div>Manager</div><div>Status</div><div>Actions</div></div>
+        <div class="dep-row" data-dep-card data-type="upstream"><strong>UI/UX Design</strong><div>Upstream</div><div>Emily Chen</div><div>Active</div><div></div></div>
+        <div class="dep-row" data-dep-card data-type="downstream"><strong>Backend Services Team</strong><div>Downstream</div><div>Michael Park</div><div>Inactive</div><div></div></div>
+      </section>
+    </main>
+
+    <aside class="side">
+      <div class="cardbox"><h3>Key Contacts</h3><strong>Sarah Johnson</strong><div class="muted">Engineering Manager</div></div>
+      <div class="cardbox quick"><h3>Quick Links</h3><a href="#">GitHub Organisation</a><a href="#">Team Documentation</a><a href="#">Team Calendar</a></div>
+    </aside>
+  </div>
+</section>
+<script src="{% static 'teams/teams.js' %}"></script>
+{% endblock %}

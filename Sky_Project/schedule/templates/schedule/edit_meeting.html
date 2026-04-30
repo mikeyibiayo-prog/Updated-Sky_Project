@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Meeting — Sky Portal{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --sky-navy:#233566; --sky-mid:#354a8e; --sky-dim:#a5b4d3;
+    --border:#e2e8f0; --surface:#ffffff; --surface-2:#f8fafc;
+    --text-1:#1e293b; --text-2:#475569; --text-3:#94a3b8;
+  }
+  .topbar {
+    background:#fff; border-bottom:1px solid var(--border);
+    padding:0 24px; height:56px; display:flex; align-items:center;
+    margin:-16px -16px 24px -16px;
+  }
+  .topbar-left { display:flex; align-items:center; gap:10px; }
+  .back-btn {
+    display:flex; align-items:center; gap:6px; color:var(--text-3);
+    font-size:0.82rem; font-weight:600; text-decoration:none;
+    padding:6px 10px; border-radius:7px; transition:background 0.12s,color 0.12s;
+  }
+  .back-btn:hover { background:var(--surface-2); color:var(--text-1); }
+  .topbar-divider { color:var(--border); }
+  .topbar-title { font-weight:700; font-size:1rem; color:var(--text-1); }
+
+  .form-wrap { max-width:720px; margin:0 auto; }
+  .form-card { background:var(--surface); border-radius:14px; border:1px solid var(--border); overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.04); }
+  .form-card-head {
+    padding:20px 24px; border-bottom:1px solid var(--border); background:var(--surface-2);
+    display:flex; align-items:flex-start; justify-content:space-between;
+  }
+  .form-card-title { font-size:1.05rem; font-weight:700; color:var(--text-1); margin-bottom:3px; }
+  .form-card-sub { font-size:0.78rem; color:var(--text-3); }
+  .badge-edit { background:#fef3c7; color:#92400e; font-size:0.72rem; font-weight:700; padding:3px 9px; border-radius:20px; }
+  .form-body { padding:24px; }
+
+  .field-group { margin-bottom:20px; }
+  .field-label { font-size:0.78rem; font-weight:700; color:var(--text-2); display:block; margin-bottom:5px; }
+  .req { color:#ef4444; margin-left:2px; }
+  .field-hint { font-size:0.72rem; color:var(--text-3); margin-top:4px; }
+
+  .f-input,.f-select,.f-textarea {
+    width:100%; border:1px solid var(--border); border-radius:8px;
+    padding:9px 12px; font-size:0.88rem; color:var(--text-1);
+    background:var(--surface); outline:none;
+    transition:border-color 0.15s,box-shadow 0.15s;
+  }
+  .f-input:focus,.f-select:focus,.f-textarea:focus {
+    border-color:var(--sky-navy); box-shadow:0 0 0 3px rgba(35,53,102,0.08);
+  }
+  .f-textarea { resize:vertical; min-height:88px; line-height:1.5; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+  .participants-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:6px;
+    max-height:210px; overflow-y:auto;
+    border:1px solid var(--border); border-radius:10px; padding:10px;
+    background:var(--surface-2);
+  }
+  .p-check-label {
+    display:flex; align-items:center; gap:10px; padding:7px 10px;
+    border-radius:8px; cursor:pointer; transition:background 0.12s; border:1px solid transparent;
+  }
+  .p-check-label:hover { background:#fff; border-color:var(--border); }
+  .p-check-label.checked-item { background:#fff; border-color:#bfdbfe; }
+  .p-check-label input { accent-color:var(--sky-navy); width:15px; height:15px; flex-shrink:0; }
+  .p-check-avatar {
+    width:28px; height:28px; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; font-size:0.72rem; font-weight:700; color:#fff;
+    flex-shrink:0; background:var(--sky-navy);
+  }
+  .p-check-name { font-size:0.82rem; font-weight:600; color:var(--text-1); }
+  .p-check-role { font-size:0.7rem; color:var(--text-3); }
+
+  .form-divider { border:none; border-top:1px solid var(--border); margin:4px 0 20px; }
+  .section-heading { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-3); margin-bottom:14px; }
+
+  .form-footer {
+    padding:16px 24px; border-top:1px solid var(--border); background:var(--surface-2);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .btn-cancel {
+    background:none; border:1px solid var(--border); border-radius:8px;
+    padding:9px 20px; font-size:0.88rem; font-weight:600; color:var(--text-2);
+    cursor:pointer; text-decoration:none; transition:background 0.12s;
+  }
+  .btn-cancel:hover { background:var(--border); }
+  .btn-submit {
+    background:var(--sky-navy); color:#fff; border:none; border-radius:8px;
+    padding:9px 24px; font-size:0.88rem; font-weight:600; cursor:pointer; transition:opacity 0.15s;
+  }
+  .btn-submit:hover { opacity:0.88; }
+  .btn-danger-outline {
+    background:none; border:1px solid #fca5a5; border-radius:8px;
+    padding:9px 20px; font-size:0.88rem; font-weight:600; color:#b91c1c;
+    cursor:pointer; transition:background 0.12s;
+  }
+  .btn-danger-outline:hover { background:#fee2e2; }
+  .participants-grid::-webkit-scrollbar { width:4px; }
+  .participants-grid::-webkit-scrollbar-track { background:transparent; }
+  .participants-grid::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+</style>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="{% url 'schedule:schedule' %}" class="back-btn">← Back</a>
+    <span class="topbar-divider">/</span>
+    <span class="topbar-title">Edit Meeting</span>
+  </div>
+</div>
+
+<div class="form-wrap">
+  <div class="form-card">
+    <div class="form-card-head">
+      <div>
+        <div class="form-card-title">{{ meeting.title }}</div>
+        <div class="form-card-sub">Update the details below. Only you can edit this meeting.</div>
+      </div>
+      <span class="badge-edit">Editing</span>
+    </div>
+
+    <form method="post" id="meeting-form">
+      {% csrf_token %}
+      <input type="hidden" name="action" id="form-action" value="save">
+
+      <div class="form-body">
+        <div class="section-heading">Meeting Details</div>
+
+        <div class="field-group">
+          <label class="field-label" for="title">Title <span class="req">*</span></label>
+          <input type="text" id="title" name="title" class="f-input" value="{{ meeting.title }}">
+        </div>
+
+        <div class="form-row field-group">
+          <div>
+            <label class="field-label" for="date">Date <span class="req">*</span></label>
+            <input type="date" id="date" name="date" class="f-input" value="{{ meeting.date|date:'Y-m-d' }}">
+          </div>
+          <div>
+            <label class="field-label" for="platform">Platform</label>
+            <select id="platform" name="platform" class="f-select">
+              <option value="Zoom"              {% if meeting.platform == "Zoom" %}selected{% endif %}>Zoom</option>
+              <option value="Microsoft Teams"   {% if meeting.platform == "Microsoft Teams" %}selected{% endif %}>Microsoft Teams</option>
+              <option value="Google Meet"       {% if meeting.platform == "Google Meet" %}selected{% endif %}>Google Meet</option>
+              <option value="In Person"         {% if meeting.platform == "In Person" %}selected{% endif %}>In Person</option>
+              <option value="Other"             {% if meeting.platform == "Other" %}selected{% endif %}>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row field-group">
+          <div>
+            <label class="field-label" for="time_start">Start Time <span class="req">*</span></label>
+            <input type="time" id="time_start" name="time_start" class="f-input" value="{{ meeting.time_start|time:'H:i' }}">
+          </div>
+          <div>
+            <label class="field-label" for="time_end">End Time <span class="req">*</span></label>
+            <input type="time" id="time_end" name="time_end" class="f-input" value="{{ meeting.time_end|time:'H:i' }}">
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="join_link">Join Link</label>
+          <input type="url" id="join_link" name="join_link" class="f-input" value="{{ meeting.join_link|default:'' }}">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="notes">Notes / Agenda</label>
+          <textarea id="notes" name="notes" class="f-textarea">{{ meeting.notes }}</textarea>
+        </div>
+
+        <hr class="form-divider">
+        <div class="section-heading">Participants</div>
+
+        <div class="field-group">
+          <div class="participants-grid">
+            {% for user in all_users %}
+            {% with is_participant=meeting.participants.all|dictsort:"id" %}
+            <label class="p-check-label {% if user in meeting.participants.all %}checked-item{% endif %}">
+              <input type="checkbox" name="participants" value="{{ user.id }}"
+                {% if user in meeting.participants.all %}checked{% endif %}>
+              <div class="p-check-avatar">{{ user.username|first|upper }}</div>
+              <div>
+                <div class="p-check-name">{{ user.get_full_name|default:user.username }}</div>
+                <div class="p-check-role">{{ user.username }}</div>
+              </div>
+            </label>
+            {% endwith %}
+            {% empty %}
+            <p style="color:var(--text-3);font-size:0.82rem;padding:8px;">No other users found.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button type="button" class="btn-danger-outline" onclick="confirmDelete()">🗑 Delete Meeting</button>
+        <div style="display:flex;gap:10px;">
+          <a href="{% url 'schedule:schedule' %}" class="btn-cancel">Cancel</a>
+          <button type="submit" class="btn-submit">Save Changes</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function confirmDelete() {
+    if (confirm('Delete "{{ meeting.title|escapejs }}"? This cannot be undone.')) {
+      document.getElementById('form-action').value = 'delete';
+      document.getElementById('meeting-form').submit();
+    }
+  }
+  document.querySelectorAll('.p-check-label input').forEach(cb => {
+    cb.addEventListener('change', function() {
+      this.closest('.p-check-label').classList.toggle('checked-item', this.checked);
+    });
+  });
+</script>
+{% endblock %}

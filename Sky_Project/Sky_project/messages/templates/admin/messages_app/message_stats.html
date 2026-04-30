@@ -1,0 +1,26 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<h1>Message Statistics</h1>
+
+<div class="module">
+    <table>
+        <tr>
+            <th>Total Messages</th>
+            <td>{{ total }}</td>
+        </tr>
+        <tr>
+            <th>Sent Messages</th>
+            <td>{{ sent }}</td>
+        </tr>
+        <tr>
+            <th>Draft Messages</th>
+            <td>{{ drafts }}</td>
+        </tr>
+    </table>
+</div>
+
+<p>
+    <a href="../" class="button">Back to Messages</a>
+</p>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Main container styling */
+    .org-container {
+        padding: 40px;
+        background-color: #f5f6fa; 
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        /* Enables scrolling if the tree gets too wide on small screens */
+        overflow-x: auto; 
+    }
+
+    .org-title {
+        color: #1e3a5f;
+        font-size: 32px;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 50px;
+    }
+
+    /* --- CSS Tree Logic --- */
+    .tree {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .tree ul {
+        padding-top: 20px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        padding-left: 0;
+        margin: 0;
+    }
+
+    .tree li {
+        float: left;
+        text-align: center;
+        list-style-type: none;
+        position: relative;
+        padding: 20px 10px 0 10px;
+    }
+
+    /* Creating the horizontal connectors */
+    .tree li::before, .tree li::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 50%;
+        border-top: 2px solid #2c3e50; /* Line color */
+        width: 50%;
+        height: 20px;
+    }
+
+    .tree li::after {
+        right: auto;
+        left: 50%;
+        border-left: 2px solid #2c3e50;
+    }
+
+    /* Clean up lines for elements without siblings */
+    .tree li:only-child::after, .tree li:only-child::before {
+        display: none;
+    }
+
+    .tree li:only-child {
+        padding-top: 0;
+    }
+
+    /* Remove left/right connectors for first/last children */
+    .tree li:first-child::before, .tree li:last-child::after {
+        border: 0 none;
+    }
+
+    /* Add back the vertical drops for edges */
+    .tree li:last-child::before {
+        border-right: 2px solid #2c3e50;
+        border-radius: 0 4px 0 0;
+    }
+
+    .tree li:first-child::after {
+        border-radius: 4px 0 0 0;
+    }
+
+    /* Downward connectors from parents */
+    .tree ul ul::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        border-left: 2px solid #2c3e50;
+        width: 0;
+        height: 20px;
+        margin-left: -1px;
+    }
+
+    /* --- Node Card Styling --- */
+    .node {
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        display: inline-block;
+        color: #1e3a5f;
+        font-size: 15px;
+        font-weight: 500;
+        min-width: 140px;
+        line-height: 1.4;
+    }
+</style>
+
+<div class="org-container">
+    <h1 class="org-title">Organisation Overview</h1>
+
+    <div class="tree">
+        <ul>
+            <li>
+                <div class="node">Core<br>Department</div>
+                <ul>
+                    <li>
+                        <div class="node">Engineering<br>Department</div>
+                        <ul>
+                            <li><div class="node">Platform<br>Engineering<br>Department</div></li>
+                            <li><div class="node">Broadcasting<br>Department</div></li>
+                        </ul>
+                    </li>
+                    
+                    <li>
+                        <div class="node">Products<br>Department</div>
+                        <ul>
+                            <li><div class="node">Product Dev<br>Department</div></li>
+                            <li><div class="node">Mobile App<br>Department</div></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <div class="node">Internal<br>Services<br>Department</div>
+                        <ul>
+                            <li><div class="node">Management<br>Department</div></li>
+                            <li><div class="node">Human<br>Resources<br>Department</div></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
