@@ -74,14 +74,14 @@
 
 <!-- introduction explaining what the report contains -->
 <p>
-    This report summarises the organisation data stored in the Sky Project database.
+    This report summarises the organisation data stored in the Sky database.
     The information is taken from the Django admin site and shows how departments,
     teams, engineers, repositories, contact channels and team dependencies are linked together.
 </p>
 
 <h2>Report Summary</h2>
 
-<!-- summary counts passed from the report view -->
+<!-- summary counts passed on from the report view -->
 <div class="summary-box">
     <p><strong>Total departments:</strong> {{ total_departments }}</p>
     <p><strong>Total teams:</strong> {{ total_teams }}</p>
@@ -95,12 +95,12 @@
 <h2>Department Structure</h2>
 
 <p>
-    The departments organise the teams into main areas of the business. In this project,
-    the departments include Engineering Department, Product department and Internal Services Department.
-    This matches the coursework database design because each team belongs to a department.
+	The departments Structure section organise the teams into main areas of the business. In this Report,
+	the departments include Engineering Department, Product department and Internal Services Department.
+	This matches the database design because each team belongs to a department.
 </p>
 
-<!-- table showing each department and how many teams it contains -->
+<!-- The table showing each department and how many teams it has -->
 <table>
     <tr>
         <th>Department</th>
@@ -120,11 +120,11 @@
 <h2>Team Summary</h2>
 
 <p>
-    This section shows the teams that have been added to the database. It also shows which department
+    This section shows which teams that have been added to the database. It also shows which department
     each team belongs to and whether the team has a manager, members, repositories and dependencies.
 </p>
 
-<!-- table summarising each team -->
+<!-- The table summarising each team -->
 <table>
     <tr>
         <th>Team Name</th>
@@ -160,7 +160,7 @@
     team member table links engineers to teams and allows each engineer to have a role in the team.
 </p>
 
-<!-- table showing engineer membership details -->
+<!-- The table showing engineer membership details -->
 <table>
     <tr>
         <th>Engineer</th>
@@ -187,7 +187,7 @@
     dependencies were part of the organisation structure.
 </p>
 
-<!-- table showing dependencies between teams -->
+<!-- The table showing dependencies between teams -->
 <table>
     <tr>
         <th>Team</th>
@@ -210,10 +210,10 @@
 
 <p>
     This section shows the repositories linked to teams. This is useful because it shows which teams
-    are responsible for different parts of the system or project work.
+    are responsible for different parts of the system or project.
 </p>
 
-<!-- table showing team repositories -->
+<!-- The table showing team repositories -->
 <table>
     <tr>
         <th>Repository</th>
@@ -237,7 +237,7 @@
     because users can quickly see how to contact a team.
 </p>
 
-<!-- table showing contact methods for teams -->
+<!-- The table showing ways you can contact the team -->
 <table>
     <tr>
         <th>Team</th>
@@ -261,7 +261,7 @@
     it shows missing data that could be improved later in the admin dashboard.
 </p>
 
-<!-- table showing missing manager data -->
+<!-- The table showing missing manager data -->
 <table>
     <tr>
         <th>Team Name</th>
@@ -282,7 +282,7 @@
     {% endfor %}
 </table>
 
-<!-- footer note for the generated report -->
+<!-- The footer note for the generated report -->
 <div class="footer">
     Generated from the Django admin site using the Sky Project database.
 </div>
